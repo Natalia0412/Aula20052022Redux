@@ -1,3 +1,6 @@
+const Redux=require('redux')
+const{createStore,combineReducers}=Redux
+
 //arrow function
 //se chama : criarContrato
 //recebe:nome e valor
@@ -47,7 +50,7 @@ const historicoDePedidosCashbackReducer=(historicoDePedidosCashback=[],acao)=>{
         ...historicoDePedidosCashback,acao.payload
         ]
     }
-    return HistoricoDePedidosCashback
+    return historicoDePedidosCashback
  }
 //implementar o reducer que manipula o caixa 
 // o caixa começa zerado
@@ -69,7 +72,7 @@ return valorEmCaixa
 
 const contratosReducer=(listaContratosAtual=[],acao)=>{
     if(acao.type==="CRIAR_CONTRATO"){
-        return[listaContratosAtual,acao.payload]
+        return[...listaContratosAtual,acao.payload]
     }
     if(acao.type==="CANCELAR_CONTRATO")
     {
@@ -77,3 +80,34 @@ const contratosReducer=(listaContratosAtual=[],acao)=>{
     }
     return listaContratosAtual
 }
+const todosOsReducers=combineReducers({
+historicoDePedidosCashback:historicoDePedidosCashbackReducer,
+caixaReducer,
+contratos:contratosReducer
+})
+
+const store= createStore(todosOsReducers)
+//Criar contrato para o José 
+const acaoContratoJose=criarContrato('José',50)
+store.dispatch(acaoContratoJose)
+console.log(store.getState())
+
+//Criar contrato para a Maria 
+
+const acaoContratoMaria=criarContrato('Maria',50)
+store.dispatch(acaoContratoMaria)
+console.log(store.getState())
+
+//pedido de cashback para Maria de 10
+const acaoCashbackMaria=solicitarCashback('Maria',10)
+store.dispatch(acaoContratoMaria)
+console.log(store.getState())
+//pedido de cashback para o José de 20
+const acaoCashbackJose=solicitarCashback('José',20)
+store.dispatch(acaoContratoJose)
+console.log(store.getState())
+
+//cancelar contrato de Maria 
+
+store.dispatch(cancelarContrato('Maria'))
+console.log(store.getState())
